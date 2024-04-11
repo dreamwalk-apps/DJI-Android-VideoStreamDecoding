@@ -259,6 +259,10 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
                          * on surfaceView
                          */
                         DJIVideoStreamDecoder.getInstance().parse(videoBuffer, size);
+
+                        if (mCodecManager != null) {
+                            mCodecManager.sendDataToDecoder(videoBuffer, size);
+                        }
                         break;
 
                     case USE_TEXTURE_VIEW:
@@ -379,6 +383,11 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
                         NativeHelper.getInstance().init();
                         DJIVideoStreamDecoder.getInstance().init(getApplicationContext(), holder.getSurface());
                         DJIVideoStreamDecoder.getInstance().resume();
+
+                        if (mCodecManager == null) {
+                            mCodecManager = new DJICodecManager(getApplicationContext(), holder, videoViewWidth,
+                                videoViewHeight);
+                        }
                         break;
                 }
 
@@ -556,11 +565,15 @@ public class MainActivity extends Activity implements DJICodecManager.YuvDataCal
             yuvFrame[length + 2 * i + 1] = u[i];
         }
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-            screenShot(yuvFrame, getApplicationContext().getExternalFilesDir("DJI").getPath() + "/DJI_ScreenShot", width, height);
-        } else {
-            screenShot(yuvFrame, Environment.getExternalStorageDirectory() + "/DJI_ScreenShot", width, height);
-        }
+        Log.d(TAG,
+            "onYuvDataReceived: frame index: "
+                + DJIVideoStreamDecoder.getInstance().frameIndex);
+
+//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+//            screenShot(yuvFrame, getApplicationContext().getExternalFilesDir("DJI").getPath() + "/DJI_ScreenShot", width, height);
+//        } else {
+//            screenShot(yuvFrame, Environment.getExternalStorageDirectory() + "/DJI_ScreenShot", width, height);
+//        }
     }
 
     /**

@@ -52,10 +52,10 @@
             android:id="@+id/activity_main_screen_texture"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="Demo TextureView"
             android:clickable="true"
+            android:gravity="center"
             android:onClick="onClick"
-            android:gravity="center"  />
+            android:text="Demo TextureView" />
 
         <Button
             android:id="@+id/activity_main_screen_surface_with_own_decoder"
